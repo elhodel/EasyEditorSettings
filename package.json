@@ -1,0 +1,17 @@
+{
+  "name": "ch.elhodel.easy-editor-settings",
+  "version": "0.1.0",
+  "displayName": "Easy Editor Settings",
+  "description": "This package provides an easy way to create editor Settings for Tools.",
+  "unity": "2021.3",
+  "unityRelease": "0f1",
+  "documentationUrl": "https://github.com/elhodel/SceneSelectionOverlay/readme.md",
+  "changelogUrl": "https://github.com/elhodel/SceneSelectionOverlay/changelog.md",
+  "licensesUrl": "https://github.com/elhodel/SceneSelectionOverlay/licensing.md",
+
+
+  "author": {
+    "name": "elhodel",
+    "url": "https://github.com/elhodel/"
+  }
+}
