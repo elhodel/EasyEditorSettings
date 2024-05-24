@@ -9,13 +9,13 @@ namespace elhodel.EasyEditorSettings
     {
         private string _savePath;
         private string _menuPath;
-        private FilePathAttribute.Location _location;
+        private SettingsScope _scope;
 
-        public EasyEditorSettingsAttribute(string savePath, string menuPath, FilePathAttribute.Location location)
+        public EasyEditorSettingsAttribute(SettingsScope scope,  string savePath, string menuPath)
         {
             _savePath = savePath;
             _menuPath = menuPath;
-            _location = location;
+            _scope = scope;
         }
     }
 
