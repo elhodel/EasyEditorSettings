@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEditor;
 
+namespace elhodel.EasyEditorSettings
 {
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
@@ -17,3 +18,5 @@ using UnityEditor;
             _location = location;
         }
     }
+
+}

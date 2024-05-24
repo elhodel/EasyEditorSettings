@@ -4,6 +4,7 @@
     {
         public const string EasyEditorSettings = "EasyEditorSettings";
         public const string EasyEditorSettingsAttribute = "EasyEditorSettingsAttribute";
+        public const string ScriptableSingletonSettingsProvider = "ScriptableSingletonSettingsProvider";
         public const string SerializeField = "SerializeField";
     }
 }
