@@ -5,8 +5,7 @@ using test.something.Hello.Blah;
 
 
 
-[EasyEditorSettings]
-[FilePath("ProjectSettings/Tools/TestSettings.asset", FilePathAttribute.Location.ProjectFolder)]
+[EasyEditorSettings("ProjectSettings/Tools/TestSettings.asset", "Tools/Test Settings", FilePathAttribute.Location.ProjectFolder)]
 public partial class TestSettings : ScriptableSingleton<TestSettings>
 {
    
