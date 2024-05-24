@@ -9,6 +9,8 @@ namespace elhodel.EasyEditorSettings
 
     public class ScriptableSingletonProvider : SettingsProvider
     {
+        private const string _styleSheetAssetGuid = "5bdbd6e786df7164d8dba40b87172110";
+
 
         private List<PropertyField> _propertyFields;
         private SerializedObject _serializedObject;
@@ -23,6 +25,15 @@ namespace elhodel.EasyEditorSettings
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
             base.OnActivate(searchContext, rootElement);
+
+            var stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(_styleSheetAssetGuid));
+
+            if (stylesheet != null)
+            {
+                rootElement.styleSheets.Add(stylesheet);
+            }
+            rootElement.AddToClassList("settings-provider");
+
             _propertyFields = new List<PropertyField>();
 
             var settings = _serializedObject;
