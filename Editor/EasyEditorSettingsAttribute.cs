@@ -1,18 +1,19 @@
 ﻿using System;
 using UnityEditor;
 
-
-[AttributeUsage(AttributeTargets.Class)]
-public class EasyEditorSettingsAttribute : Attribute
 {
-    public string SavePath;
-    public string MenuPath;
-    public FilePathAttribute.Location Location;
 
-    public EasyEditorSettingsAttribute(string savePath, string menuPath, FilePathAttribute.Location location)
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class EasyEditorSettingsAttribute : Attribute
     {
-        SavePath = savePath;
-        MenuPath = menuPath;
-        Location = location;
+        private string _savePath;
+        private string _menuPath;
+        private FilePathAttribute.Location _location;
+
+        public EasyEditorSettingsAttribute(string savePath, string menuPath, FilePathAttribute.Location location)
+        {
+            _savePath = savePath;
+            _menuPath = menuPath;
+            _location = location;
+        }
     }
-}
