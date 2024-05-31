@@ -1,0 +1,2 @@
+# Easy Editor Settings
+
