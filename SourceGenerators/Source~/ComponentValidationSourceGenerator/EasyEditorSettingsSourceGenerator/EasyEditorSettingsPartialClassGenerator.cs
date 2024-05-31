@@ -53,8 +53,8 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
 
                 AttributeData attribute = classSymbol.GetAttributes().FirstOrDefault(a => a.AttributeClass.Name == Constants.EasyEditorSettingsAttribute);
 
-                string menuPath = attribute.ConstructorArguments[1].Value.ToString();
-                string scope = (int)attribute.ConstructorArguments[2].Value == 0 ? "SettingsScope.User" : "SettingsScope.Project";
+                string menuPath = attribute.ConstructorArguments[2].Value.ToString();
+                string scope = (int)attribute.ConstructorArguments[0].Value == 0 ? "SettingsScope.User" : "SettingsScope.Project";
                 classBuilder.AppendLine("[SettingsProvider]");
                 classBuilder.AppendLine($"public static SettingsProvider Create{classSymbol.Name}SettingsProvider()");
                 classBuilder.AppendLine("{");
@@ -91,7 +91,7 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
             }
 
 
-            classBuilder.AppendLine($"[FilePath(\"{attribute.ConstructorArguments[0].Value}\", ({attribute.ConstructorArguments[2].Type}){attribute.ConstructorArguments[2].Value})]\r\n");
+            classBuilder.AppendLine($"[FilePath(\"{attribute.ConstructorArguments[1].Value}\", (UnityEditor.FilePathAttribute.Location){attribute.ConstructorArguments[0].Value})]\r\n");
             classBuilder.AppendLine($"public partial class {classSymbol.Name}");
             classBuilder.AppendLine("{");
 
