@@ -13,11 +13,11 @@ namespace elhodel.EasyEditorSettings
         private List<PropertyField> _propertyFields;
         private SerializedObject _serializedObject;
         private Action _saveAction;
-        public ScriptableSingletonProvider(SerializedObject serializedObject, Action saveAction, string path, SettingsScope scopes, IEnumerable<string> keywords = null) : base(path, scopes, keywords)
+        public ScriptableSingletonProvider(SerializedObject serializedObject, Action saveAction, string path, SettingsScope scopes) : base(path, scopes, null)
         {
             _saveAction = saveAction;
             _serializedObject = serializedObject;
-            GetSearchKeywordsFromSerializedObject(serializedObject);
+            this.keywords = GetSearchKeywordsFromSerializedObject(serializedObject);
         }
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
