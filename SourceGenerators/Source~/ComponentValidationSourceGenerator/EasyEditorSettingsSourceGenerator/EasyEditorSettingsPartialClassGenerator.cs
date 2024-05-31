@@ -39,6 +39,8 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
 
         private void GenerateSettingsProvider(GeneratorExecutionContext context, Dictionary<INamedTypeSymbol, List<IFieldSymbol>>.KeyCollection keys)
         {
+
+
             StringBuilder classBuilder = new StringBuilder();
             classBuilder.AppendLine($"using UnityEditor;");
             classBuilder.AppendLine($"namespace elhodel.EasyEditorSettings.SourceGenerators");
@@ -50,10 +52,14 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
             foreach (INamedTypeSymbol classSymbol in keys)
             {
 
+                AttributeData attribute = classSymbol.GetAttributes().FirstOrDefault(a => a.AttributeClass.Name == Constants.EasyEditorSettingsAttribute);
+
+                string menuPath = attribute.ConstructorArguments[1].Value.ToString();
+                string scope = (int)attribute.ConstructorArguments[2].Value == 0 ? "SettingsScope.User" : "SettingsScope.Project";
                 classBuilder.AppendLine("[SettingsProvider]");
                 classBuilder.AppendLine($"public static SettingsProvider Create{classSymbol.Name}SettingsProvider()");
                 classBuilder.AppendLine("{");
-                classBuilder.AppendLine($@"return new ScriptableSingletonProvider(new SerializedObject({classSymbol.ToDisplayString()}.instance), () => {classSymbol.ToDisplayString()}.instance.Save(), ""Tools/{classSymbol.Name}"", SettingsScope.Project);
+                classBuilder.AppendLine($@"return new ScriptableSingletonProvider(new SerializedObject({classSymbol.ToDisplayString()}.instance), () => {classSymbol.ToDisplayString()}.instance.Save(), ""{menuPath}"", {scope});
 ");
                 classBuilder.AppendLine("}");
             }
@@ -69,10 +75,45 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
 
         private void GenerateClassFile(GeneratorExecutionContext context, INamedTypeSymbol classSymbol, List<IFieldSymbol> fieldSymbols)
         {
+            StringBuilder classBuilder = new StringBuilder();
             var namespaceSymbol = classSymbol.ContainingNamespace;
 
-            StringBuilder classBuilder = new StringBuilder();
+            var attributes = classSymbol.GetAttributes();
 
+            foreach (var attr in attributes)
+            {
+                classBuilder.Append($"//{attr.AttributeClass.Name} ");
+
+            }
+
+            AttributeData attribute = attributes.FirstOrDefault(a => a.AttributeClass.Name == Constants.EasyEditorSettingsAttribute);
+
+
+
+            if (attribute != null)
+            {
+
+                classBuilder.Append($"//");
+                foreach (var kvp in attribute.NamedArguments)
+                {
+
+                    classBuilder.Append($"{kvp.Key} {kvp.Value.Value.ToString()} ||");
+                }
+                foreach (var a in attribute.ConstructorArguments)
+                {
+
+                    classBuilder.Append($"{a.Value} {a.Type} {a.Kind} ||");
+                }
+
+            }
+            else
+            {
+                classBuilder.AppendLine($"//Attribute not found");
+
+            }
+
+
+            classBuilder.AppendLine();
             classBuilder.AppendLine($"using UnityEngine;");
             classBuilder.AppendLine($"using UnityEditor;");
             classBuilder.AppendLine($"using System;");
@@ -82,6 +123,9 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
                 classBuilder.AppendLine($"namespace {namespaceSymbol.ToDisplayString()}");
                 classBuilder.AppendLine("{");
             }
+
+
+            classBuilder.AppendLine($"[FilePath(\"{attribute.ConstructorArguments[0].Value}\", ({attribute.ConstructorArguments[2].Type}){attribute.ConstructorArguments[2].Value})]\r\n");
             classBuilder.AppendLine($"public partial class {classSymbol.Name}");
             classBuilder.AppendLine("{");
 

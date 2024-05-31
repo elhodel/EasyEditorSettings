@@ -6,8 +6,7 @@ using test.something.Hello.Blah;
 namespace elhodel.Tools
 {
 
-    [EasyEditorSettings]
-    [FilePath("ProjectSettings/Tools/OtherSettings.asset", FilePathAttribute.Location.ProjectFolder)]
+    [EasyEditorSettings("ProjectSettings/Tools/OtherSettings.asset", "Tools/Other Settings", FilePathAttribute.Location.ProjectFolder)]
 
     public partial class OtherToolSettings : ScriptableSingleton<OtherToolSettings>
     {

@@ -19,7 +19,7 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
         {
             if (context.Node is ClassDeclarationSyntax classDeclarationSyntax)
             {
-                if (HasAttribute(classDeclarationSyntax, Constants.EasyEditorSettingsAttribute))//   HasInterface(classDeclarationSyntax, Constants.IValidatable))
+                if (HasAttribute(classDeclarationSyntax, Constants.EasyEditorSettings))//   HasInterface(classDeclarationSyntax, Constants.IValidatable))
                 {
                     DebugOutput.Add("Im in!");
                     DebugOutput.Add($"Class: {classDeclarationSyntax.Identifier.Text}");
