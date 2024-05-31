@@ -7,7 +7,7 @@ using System;
 namespace elhodel.EasyEditorSettings
 {
 
-    public class ScriptableSingletonProvider : SettingsProvider
+    public class ScriptableSingletonSettingsProvider : SettingsProvider
     {
         private const string _styleSheetAssetGuid = "5bdbd6e786df7164d8dba40b87172110";
 
@@ -15,7 +15,7 @@ namespace elhodel.EasyEditorSettings
         private List<PropertyField> _propertyFields;
         private SerializedObject _serializedObject;
         private Action _saveAction;
-        public ScriptableSingletonProvider(SerializedObject serializedObject, Action saveAction, string path, SettingsScope scopes) : base(path, scopes, null)
+        public ScriptableSingletonSettingsProvider(SerializedObject serializedObject, Action saveAction, string path, SettingsScope scopes) : base(path, scopes, null)
         {
             _saveAction = saveAction;
             _serializedObject = serializedObject;

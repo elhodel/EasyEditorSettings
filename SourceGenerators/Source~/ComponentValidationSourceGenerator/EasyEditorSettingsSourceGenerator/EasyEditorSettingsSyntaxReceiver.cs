@@ -13,30 +13,24 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
 
     internal class EasyEditorSettingsSyntaxReceiver : ISyntaxContextReceiver
     {
+        /// <summary>
+        /// A map of all classes with the <see cref="Constants.EasyEditorSettingsAttribute"/> and the fields for which Properties should be created
+        /// </summary>
         public Dictionary<INamedTypeSymbol, List<IFieldSymbol>> ValidClasses { get; } = new Dictionary<INamedTypeSymbol, List<IFieldSymbol>>();
-        public List<string> DebugOutput = new List<string>();
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
             if (context.Node is ClassDeclarationSyntax classDeclarationSyntax)
             {
-                if (HasAttribute(classDeclarationSyntax, Constants.EasyEditorSettings))//   HasInterface(classDeclarationSyntax, Constants.IValidatable))
+                if (HasAttribute(classDeclarationSyntax, Constants.EasyEditorSettings))
                 {
-                    DebugOutput.Add("Im in!");
-                    DebugOutput.Add($"Class: {classDeclarationSyntax.Identifier.Text}");
-                    var typeNodeSymbol = context.SemanticModel.Compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree).GetDeclaredSymbol(classDeclarationSyntax) as INamedTypeSymbol;
 
-                    var potentialFields = typeNodeSymbol.GetMembers().OfType<IFieldSymbol>().ToList();//  Where(s => s.Kind == SymbolKind.Field).ToList();
+                    INamedTypeSymbol typeNodeSymbol = context.SemanticModel.Compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree).GetDeclaredSymbol(classDeclarationSyntax) as INamedTypeSymbol;
+
+                    List<IFieldSymbol> potentialFields = typeNodeSymbol.GetMembers().OfType<IFieldSymbol>().ToList();
 
 
-                    foreach (var potentialField in potentialFields)
+                    foreach (IFieldSymbol potentialField in potentialFields)
                     {
-                        DebugOutput.Add($"potentialField: {potentialField.Name.ToString()}");
-
-                        foreach(var attr in potentialField.GetAttributes())
-                        {
-                            DebugOutput.Add($"Attribute Name {attr.AttributeClass.Name} DisplayString: {attr.AttributeClass.ToDisplayString()}");
-                        }
-
 
                         if (potentialField.GetAttributes().Any(a => a.AttributeClass.Name == Constants.SerializeField))
                         {
@@ -55,42 +49,12 @@ namespace elhodel.EasyEditorSettings.SourceGenerators
 
         private bool HasAttribute(ClassDeclarationSyntax classDeclarationSyntax, string easyEditorSettingsAttribute)
         {
-            var hasAttribute = classDeclarationSyntax.AttributeLists
-                .SelectMany(attrList => attrList.Attributes);
+            var allAttributes = classDeclarationSyntax.AttributeLists.SelectMany(attrList => attrList.Attributes);
 
-            foreach (var attribute in hasAttribute)
-            {
-                DebugOutput.Add(attribute.Name.ToString());
-            }
-            return hasAttribute.Any(attr => attr.Name.ToString() == easyEditorSettingsAttribute);
+            return allAttributes.Any(attr => attr.Name.ToString() == easyEditorSettingsAttribute);
 
-
-
-            return classDeclarationSyntax.AttributeLists.Any(a => a.Attributes.Any(b => b.Name.ToString() == easyEditorSettingsAttribute));
-        }
-
-        /// <summary>Indicates whether or not the class has a specific interface.</summary>
-        /// <returns>Whether or not the SyntaxList contains the attribute.</returns>
-        public static bool HasInterface(ClassDeclarationSyntax source, string interfaceName)
-        {
-            IEnumerable<BaseTypeSyntax> baseTypes = source.BaseList.Types.Select(baseType => baseType);
-
-            // To Do - cleaner interface finding.
-            return baseTypes.Any(baseType => baseType.ToString() == interfaceName);
         }
 
 
-        private bool IsDerivedFrom(INamedTypeSymbol baseType, string targetType)
-        {
-            while (baseType != null)
-            {
-                if (baseType.Name == targetType)
-                    return true;
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
-        }
     }
 }
