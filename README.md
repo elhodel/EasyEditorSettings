@@ -63,6 +63,11 @@ When `scope` is set to `User` the Path is relative to the Preferences Folder: ht
 `menuPath`:
 Path in the EditorWindow of the ProjectSettings or Prefernces depending on `location`
 
+## Installation
+Get the Package from OpenUPM: https://openupm.com/packages/ch.elhodel.easy-editor-settings/
+
+Or add it in the Package Manager with "Add package from git URL..." with this URL: `https://github.com/elhodel/EasyEditorSettings.git`
+
 ## Planned Improvements
 
 - Improve saving timing, currently the whole Setting is always saved on any change which is suboptimal when working with complex/big Settings.
