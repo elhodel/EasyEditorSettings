@@ -1,6 +1,6 @@
 {
   "name": "ch.elhodel.easy-editor-settings",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Easy Editor Settings",
   "description": "This package provides an easy way to create editor Settings for Tools.",
   "unity": "2022.3",

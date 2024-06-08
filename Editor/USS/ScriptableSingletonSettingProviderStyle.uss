@@ -9,3 +9,24 @@
     -unity-font-style: bold;
     font-size: var(--unity-metrics-default-font_very_big_size);
 }
+
+.title-container {
+    flex-direction: row;
+    padding-bottom: 8px;
+    padding-left: 4px;
+    justify-content: space-between;
+}
+
+.context-menu {
+    right: 0;
+    position: relative;
+    justify-content: center;
+}
+
+.context-menu:hover {
+    background-color: var(--unity-colors-highlight-background-hover-lighter);
+}
+
+.context-menu:active {
+    background-color: var(--unity-colors-button-background-focus);
+}

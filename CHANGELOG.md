@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2024-06-08
+
+### Added
+
+- Add Custom Button to open Context Menu to SettingsProvider GUI 
+
 ## [0.0.2] - 2024-05-31
 
 ### Added

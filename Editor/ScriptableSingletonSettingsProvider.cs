@@ -3,6 +3,9 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System;
+using System.Linq;
+using UnityEngine;
+using System.Reflection;
 
 namespace elhodel.EasyEditorSettings
 {
@@ -15,6 +18,8 @@ namespace elhodel.EasyEditorSettings
         private List<PropertyField> _propertyFields;
         private SerializedObject _serializedObject;
         private Action _saveAction;
+
+        Dictionary<string, MethodInfo> _contextMenuItems = new Dictionary<string, MethodInfo>();
         public ScriptableSingletonSettingsProvider(SerializedObject serializedObject, Action saveAction, string path, SettingsScope scopes) : base(path, scopes, null)
         {
             _saveAction = saveAction;
@@ -38,6 +43,8 @@ namespace elhodel.EasyEditorSettings
 
             var settings = _serializedObject;
 
+            var titleContainer = new VisualElement();
+            titleContainer.AddToClassList("title-container");
             // rootElement is a VisualElement. If you add any children to it, the OnGUI function
             // isn't called because the SettingsProvider uses the UIElements drawing framework.
             //var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/settings_ui.uss");
@@ -47,8 +54,18 @@ namespace elhodel.EasyEditorSettings
                 text = label
             };
             title.AddToClassList("title");
-            rootElement.Add(title);
+            titleContainer.Add(title);
 
+            Button contextMenuButton = new Button(OpenContextMenu);
+            contextMenuButton.RemoveFromClassList("unity-button");
+            contextMenuButton.AddToClassList("context-menu");
+            contextMenuButton.style.maxWidth = 18;
+
+            contextMenuButton.Add(UiUtils.GetLogIconImage("_Menu"));
+
+            titleContainer.Add(contextMenuButton);
+
+            rootElement.Add(titleContainer);
             var properties = new VisualElement()
             {
                 style =
@@ -71,6 +88,58 @@ namespace elhodel.EasyEditorSettings
             }
 
             rootElement.Bind(settings);
+
+            _contextMenuItems = GetContextMenuEntries(_serializedObject.targetObject.GetType());
+
+            if(_contextMenuItems.Count == 0)
+            {
+                contextMenuButton.style.display = DisplayStyle.None;
+            }
+        }
+
+        private static Dictionary<string, MethodInfo> GetContextMenuEntries(Type type)
+        {
+            var contextMenuEntries = new Dictionary<string, MethodInfo>();
+
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+
+            foreach (var method in methods)
+            {
+                object[] attributes = method.GetCustomAttributes(typeof(ContextMenu), false);
+
+                if (attributes.Length == 0)
+                {
+                    continue;
+                }
+
+                ContextMenu[] contextMenus = attributes.OfType<ContextMenu>().ToArray();
+
+                foreach (var contextMenu in contextMenus)
+                {
+                    if (!contextMenu.validate)
+                    {
+                        contextMenuEntries.Add(contextMenu.menuItem, method);
+
+                    }
+                }
+            }
+
+            return contextMenuEntries;
+        }
+
+        private void OpenContextMenu()
+        {
+            // create the menu and add items to it
+            GenericMenu menu = new GenericMenu();
+
+            foreach (var menuItem in _contextMenuItems)
+            {
+                menu.AddItem(new GUIContent(menuItem.Key), false, () => menuItem.Value.Invoke(_serializedObject.targetObject, null));
+
+            }
+            // display the menu
+            menu.ShowAsContext();
         }
 
         private void OnAnyValueChanged(SerializedPropertyChangeEvent evt)
